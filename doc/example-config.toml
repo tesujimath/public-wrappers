@@ -1,0 +1,8 @@
+blah = "something"
+
+[conda.bifo-essential]
+wrapperdir = "/home/guestsi/junk/bifo-essential-wrappers"
+envdir = "/stash/miniconda3/envs/bifo-essential"
+public = [
+       "bwa"
+]
