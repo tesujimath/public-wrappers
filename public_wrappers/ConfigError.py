@@ -31,4 +31,4 @@ class ConfigError(Exception):
             at = ' at %s' % '.'.join(self.context)
         else:
             at = ''
-        return('Configuration error in %s%s: %s\n' % (self.filename, at, self.msg))
+        return('ERROR in config file %s%s: %s' % (self.filename, at, self.msg))

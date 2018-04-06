@@ -4,5 +4,13 @@ globally-unique-wrappers = true
 wrapperdir = "~/junk/bifo-essential-wrappers"
 envdir = "/stash/miniconda3/envs/bifo-essential"
 public = [
-       "bwa"
+    "blastall",
+    "bwa",
+]
+
+[conda.qiime_1]
+wrapperdir = "~/junk/qiime_1-wrappers"
+envdir = "/stash/miniconda3/envs/qiime_1"
+public = [
+    "pick_otus.py",
 ]

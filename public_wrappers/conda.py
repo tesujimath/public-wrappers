@@ -33,6 +33,8 @@ def configure_conda_wrappers(args, config, wrappers):
             wrapperkey = 'global'
         else:
             wrapperkey = wrapperdir
+        if wrapperkey not in wrappers:
+            wrappers[wrapperkey] = {}
 
         envdir = env.getValueOrDie('envdir')
         envbindir = os.path.join(envdir, 'bin')
@@ -57,6 +59,11 @@ def configure_conda_wrappers(args, config, wrappers):
 
         # create wrappers
         for program in public:
+            if program in wrappers[wrapperkey]:
+                env.error('duplicate program %s' % program)
+            if not os.path.exists(os.path.join(envbindir, program)):
+                env.error('%s not found in %s' % (program, envbindir))
+            wrappers[wrapperkey][program] = True
             cmd = ['create-wrappers',
                    '-t', 'conda',
                    '--conda-env-dir', envdir,

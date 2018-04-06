@@ -41,7 +41,7 @@ class ConfigObject:
         """Iterate over values for key, which is allowed to not exist."""
         if key in self.obj:
             for subkey, subobj in viewitems(self.obj[key]):
-                yield subkey, ConfigObject(self.filename, self.context + [key], subobj)
+                yield subkey, ConfigObject(self.filename, self.context + [key, subkey], subobj)
 
     def getConfigOrDie(self, key):
         """Return config at key, or raise a ConfigError."""
