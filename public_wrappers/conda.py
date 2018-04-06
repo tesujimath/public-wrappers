@@ -22,29 +22,25 @@
 import os
 import os.path
 import subprocess
+import sys
 
 from .ConfigError import ConfigError
 
-def configure_conda_wrappers(envs):
-    for name in envs:
-        env = envs[name]
+def configure_conda_wrappers(args, config, wrappers):
+    for name, env in config.iter('conda'):
+        wrapperdir = env.getValueOrDie('wrapperdir')
+        if config.getValueOrNone('globally-unique-wrappers'):
+            wrapperkey = 'global'
+        else:
+            wrapperkey = wrapperdir
 
-        if 'wrapperdir' not in env:
-            raise ConfigError('conda env %s missing wrapperdir' % name)
-        wrapperdir = env['wrapperdir']
-
-        if 'envdir' not in env:
-            raise ConfigError('conda env %s missing envdir' % name)
-        envdir = env['envdir']
-        if not os.path.isdir(envdir):
-            raise ConfigError('conda env %s not found in filesystem at' % (name, envdir))
+        envdir = env.getValueOrDie('envdir')
         envbindir = os.path.join(envdir, 'bin')
         if not os.path.isdir(envbindir):
-            raise ConfigError('conda env %s bin not found in filesystem at' % (name, envbindir))
+            env.error('bin not found in filesystem at %s' % envbindir)
 
-        if 'public' not in env:
-            raise ConfigError('conda env %s missing public' % name)
-        public = {program: True for program in env['public']}
+        public = {program: True for program in env.getValueOrDie('public')}
+        programs = {}
 
         # ensure wrapperdir exists
         if not os.path.isdir(wrapperdir):
@@ -52,14 +48,21 @@ def configure_conda_wrappers(envs):
 
         # delete any unwanted programs
         for program in os.listdir(wrapperdir):
-            if program not in public:
-                os.remove(os.path.join(wrapperdir, program))
+            if program not in public and program != 'run-in':
+                path = os.path.join(wrapperdir, program)
+                sys.stderr.write('rm %s\n' % path)
+                os.remove(path)
+            else:
+                programs[program] = True
 
         # create wrappers
         for program in public:
-            subprocess.check_call(['create-wrappers',
-                                   '-t', 'conda',
-                                   '--conda-env-dir', envdir,
-                                   '-b', envbindir,
-                                   '-d', wrapperdir,
-                                   '-f', program])
+            cmd = ['create-wrappers',
+                   '-t', 'conda',
+                   '--conda-env-dir', envdir,
+                   '-b', envbindir,
+                   '-d', wrapperdir,
+                   '-f', program]
+            if program not in programs or args.force:
+                sys.stderr.write('%s\n' % ' '.join(cmd))
+                subprocess.check_call(cmd)

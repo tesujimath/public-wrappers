@@ -28,22 +28,20 @@ import sys
 
 from public_wrappers.conda import configure_conda_wrappers
 from public_wrappers.ConfigError import ConfigError
-
-def read_config_file(configFile):
-    with open(configFile, 'rb') as f:
-        return toml.load(f)
+from public_wrappers.config import read_config_file
 
 def main():
     parser = argparse.ArgumentParser(description='Configure public wrappers for conda applications.')
-    parser.add_argument('-c', '--config', dest='config', metavar='FILE', default='/etc/public-wrappers.toml', help='configuration file')
+    parser.add_argument('-c', '--config', dest='config', metavar='FILE', help='configuration file')
+    parser.add_argument('-f', '--force', dest='force', action='store_true', help='configuration file')
     args = parser.parse_args()
 
-    config = read_config_file(args.config)
+    config = read_config_file(args)
+    wrappers = {}
     try:
-        if 'conda' in config:
-            configure_conda_wrappers(config['conda'])
+        configure_conda_wrappers(args, config, wrappers)
     except ConfigError as e:
-        sys.stderr.write('Configuration error in %s: %s\n' % (args.config, e.msg))
+        sys.stderr.write('%s\n' % e)
 
 if __name__ == '__main__':
     main()

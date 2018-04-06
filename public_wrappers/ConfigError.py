@@ -21,5 +21,14 @@
 
 class ConfigError(Exception):
 
-    def __init__(self, msg):
+    def __init__(self, filename, context, msg):
+        self.filename = filename
+        self.context = context
         self.msg = msg
+
+    def __str__(self):
+        if len(self.context) > 0:
+            at = ' at %s' % '.'.join(self.context)
+        else:
+            at = ''
+        return('Configuration error in %s%s: %s\n' % (self.filename, at, self.msg))

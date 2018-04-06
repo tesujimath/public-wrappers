@@ -1,4 +1,4 @@
-blah = "something"
+globally-unique-wrappers = true
 
 [conda.bifo-essential]
 wrapperdir = "/home/guestsi/junk/bifo-essential-wrappers"
