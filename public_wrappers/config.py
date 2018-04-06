@@ -20,9 +20,13 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from future.utils import viewitems
+import os.path
 import pytoml as toml
 
 from ConfigError import ConfigError
+
+def expand(s):
+    return os.path.expanduser(os.path.expandvars(s))
 
 class ConfigObject:
     def __init__(self, filename, context, obj):
@@ -46,17 +50,24 @@ class ConfigObject:
         else:
             self.error('missing %s' % key)
 
+    def _getValue(self, key):
+        value = self.obj[key]
+        if isinstance(value, basestring):
+            return expand(value)
+        else:
+            return value
+
     def getValueOrDie(self, key):
         """Return value at key, or raise a ConfigError."""
         if key in self.obj:
-            return self.obj[key]
+            return self._getValue(key)
         else:
             self.error('missing %s' % key)
 
     def getValueOrNone(self, key):
         """Return value at key, or None."""
         if key in self.obj:
-            return self.obj[key]
+            return self._getValue(key)
         else:
             return None
 
