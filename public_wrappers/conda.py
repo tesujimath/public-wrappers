@@ -21,10 +21,17 @@
 
 import os
 import os.path
+import stat
 import subprocess
 import sys
 
 from .ConfigError import ConfigError
+
+def _workaround_broken_exec_wrappers_permissions(path):
+    """Only needed until https://github.com/gqmelo/exec-wrappers/pull/21 is merged,
+    and new release made."""
+    os.chmod(path,
+             os.stat(path).st_mode | stat.S_IXGRP | stat.S_IXOTH)
 
 def configure_conda_wrappers(args, config, wrappers):
     for name, env in config.iter('conda'):
@@ -73,7 +80,5 @@ def configure_conda_wrappers(args, config, wrappers):
             if program not in programs or args.force:
                 sys.stderr.write('%s\n' % ' '.join(cmd))
                 subprocess.check_call(cmd)
-                # for some reason, permissions are wrong, so fix that:
-                os.chmod(os.path.join(wrapperdir, program), 0755)
-        # TODO work out when to do this
-        os.chmod(os.path.join(wrapperdir, 'run-in'), 0755)
+                _workaround_broken_exec_wrappers_permissions(os.path.join(wrapperdir, program))
+        _workaround_broken_exec_wrappers_permissions(os.path.join(wrapperdir, 'run-in'))
