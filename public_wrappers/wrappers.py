@@ -63,13 +63,22 @@ def _determine_wrappers(kind, config, wrappers_by_dir, envs_by_program):
 
             wrappers_by_program[program] = wrapper
 
-def _validate_wrappers(config, envs_by_program):
+def _validate_wrappers(config, wrappers_by_dir, envs_by_program):
     if config.getValueOrNone('globally-unique-wrappers'):
         for program, env_names in viewitems(envs_by_program):
             if len(env_names) > 1:
                 config.error('duplicate program %s, environments %s' % (program, ','.join(sorted(env_names))))
 
-def _create_wrappers(args, config, wrappers_by_dir):
+    for wrapperdir, wrappers in viewitems(wrappers_by_dir):
+        # check programs exist
+        for program, options in viewitems(wrappers):
+            bindir = options['-b']
+            if not os.path.isdir(bindir):
+                config.error('missing bindir %s' % bindir)
+            if not os.path.exists(os.path.join(bindir, program)):
+                config.error('%s not found in %s' % (program, bindir))
+
+def _create_wrappers(args, wrappers_by_dir):
     for wrapperdir, wrappers in viewitems(wrappers_by_dir):
         # ensure wrapperdir exists
         if not os.path.isdir(wrapperdir):
@@ -86,12 +95,6 @@ def _create_wrappers(args, config, wrappers_by_dir):
 
         # create wrappers
         for program, options in viewitems(wrappers):
-            bindir = options['-b']
-            if not os.path.isdir(bindir):
-                config.error('missing bindir %s' % bindir)
-            if not os.path.exists(os.path.join(bindir, program)):
-                config.error('%s not found in %s' % (program, bindir))
-
             cmd = ['create-wrappers']
             for k, v in viewitems(options):
                 cmd.extend([k, v])
@@ -108,7 +111,7 @@ def configure_wrappers(args):
     try:
         _determine_wrappers('conda', config, wrappers_by_dir, envs_by_program)
         _determine_wrappers('virtualenv', config, wrappers_by_dir, envs_by_program)
-        _validate_wrappers(config, envs_by_program)
-        _create_wrappers(args, config, wrappers_by_dir)
+        _validate_wrappers(config, wrappers_by_dir, envs_by_program)
+        _create_wrappers(args, wrappers_by_dir)
     except ConfigError as e:
         sys.stderr.write('%s\n' % e)
