@@ -20,10 +20,11 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from future.utils import viewitems
+from past.builtins import basestring
 import os.path
 import pytoml as toml
 
-from ConfigError import ConfigError
+from .ConfigError import ConfigError
 
 def expand(s):
     return os.path.expanduser(os.path.expandvars(s))
