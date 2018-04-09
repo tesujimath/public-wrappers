@@ -35,6 +35,14 @@ def _workaround_broken_exec_wrappers_permissions(path):
     os.chmod(path,
              os.stat(path).st_mode | stat.S_IXGRP | stat.S_IXOTH)
 
+def _envdir_tag(kind):
+    if kind == 'conda':
+        return '--conda-env-dir'
+    elif kind == 'virtualenv':
+        return '--virtual-env-dir'
+    else:
+        raise TypeError('unknown kind %s' % kind)
+
 def _determine_wrappers(kind, config, wrappers_by_dir, envs_by_program):
     for env_name, env in config.iter(kind):
         wrapperdir = env.getValueOrDie('wrapperdir')
@@ -56,7 +64,7 @@ def _determine_wrappers(kind, config, wrappers_by_dir, envs_by_program):
                 '-b': bindir,
                 '-d': wrapperdir,
                 '-f': program,
-                '--%s-env-dir' % kind: envdir,
+                _envdir_tag(kind): envdir,
             }
             if program in wrappers_by_program:
                 env.error('duplicate program %s' % program)

@@ -12,6 +12,12 @@ public = [
 wrapperdir = "~/junk/qiime_1-wrappers"
 envdir = "/stash/miniconda3/envs/qiime_1"
 public = [
-    "bwa1",
     "pick_otus.py",
+]
+
+[virtualenv.exec-wrappers]
+wrapperdir = "~/junk/exec-wrappers"
+envdir = "~/virtualenvs/exec-wrappers"
+public = [
+    "create-wrappers",
 ]
