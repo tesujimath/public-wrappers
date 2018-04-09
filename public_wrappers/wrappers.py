@@ -95,11 +95,12 @@ def _create_wrappers(args, wrappers_by_dir):
         existing_programs = {program: True for program in os.listdir(wrapperdir)}
 
         # delete any unwanted programs
-        for program in existing_programs:
-            if program not in wrappers and program != 'run-in':
-                path = os.path.join(wrapperdir, program)
-                sys.stderr.write('rm %s\n' % path)
-                os.remove(path)
+        if args.purge:
+            for program in existing_programs:
+                if program not in wrappers and program != 'run-in':
+                    path = os.path.join(wrapperdir, program)
+                    sys.stderr.write('rm %s\n' % path)
+                    os.remove(path)
 
         # create wrappers
         for program, options in viewitems(wrappers):
