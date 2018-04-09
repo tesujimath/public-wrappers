@@ -1,22 +1,15 @@
 globally-unique-wrappers = true
 
 [conda.bifo-essential]
-wrapperdir = "~/junk/bifo-essential-wrappers"
+wrapperdir = "~/wrappers/bifo-essential-wrappers"
 envdir = "/stash/miniconda3/envs/bifo-essential"
 public = [
     "blastall",
     "bwa",
 ]
 
-[conda.qiime_1]
-wrapperdir = "~/junk/qiime_1-wrappers"
-envdir = "/stash/miniconda3/envs/qiime_1"
-public = [
-    "pick_otus.py",
-]
-
 [virtualenv.exec-wrappers]
-wrapperdir = "~/junk/exec-wrappers"
+wrapperdir = "~/wrappers/exec-wrappers"
 envdir = "~/virtualenvs/exec-wrappers"
 public = [
     "create-wrappers",

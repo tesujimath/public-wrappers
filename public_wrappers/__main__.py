@@ -31,7 +31,7 @@ from public_wrappers.wrappers import configure_wrappers
 def main():
     parser = argparse.ArgumentParser(description='Configure public wrappers for conda applications.')
     parser.add_argument('-c', '--config', dest='config', metavar='FILE', help='configuration file')
-    parser.add_argument('-f', '--force', dest='force', action='store_true', help='configuration file')
+    parser.add_argument('-f', '--force', dest='force', action='store_true', help='overwrite existing wrapper scripts')
     args = parser.parse_args()
     configure_wrappers(args)
 

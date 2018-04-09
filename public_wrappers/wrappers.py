@@ -67,7 +67,7 @@ def _determine_wrappers(kind, config, wrappers_by_dir, envs_by_program):
                 _envdir_tag(kind): envdir,
             }
             if program in wrappers_by_program:
-                env.error('duplicate program %s' % program)
+                env.error('duplicate program %s in %s' % (program, wrapperdir))
 
             wrappers_by_program[program] = wrapper
 
@@ -113,10 +113,10 @@ def _create_wrappers(args, wrappers_by_dir):
         _workaround_broken_exec_wrappers_permissions(os.path.join(wrapperdir, 'run-in'))
 
 def configure_wrappers(args):
-    config = read_config_file(args)
     envs_by_program = {}
     wrappers_by_dir = {}
     try:
+        config = read_config_file(args)
         _determine_wrappers('conda', config, wrappers_by_dir, envs_by_program)
         _determine_wrappers('virtualenv', config, wrappers_by_dir, envs_by_program)
         _validate_wrappers(config, wrappers_by_dir, envs_by_program)
