@@ -26,22 +26,14 @@ import os.path
 import pytoml as toml
 import sys
 
-from public_wrappers.conda import configure_conda_wrappers
-from public_wrappers.ConfigError import ConfigError
-from public_wrappers.config import read_config_file
+from public_wrappers.wrappers import configure_wrappers
 
 def main():
     parser = argparse.ArgumentParser(description='Configure public wrappers for conda applications.')
     parser.add_argument('-c', '--config', dest='config', metavar='FILE', help='configuration file')
     parser.add_argument('-f', '--force', dest='force', action='store_true', help='configuration file')
     args = parser.parse_args()
-
-    config = read_config_file(args)
-    wrappers = {}
-    try:
-        configure_conda_wrappers(args, config, wrappers)
-    except ConfigError as e:
-        sys.stderr.write('%s\n' % e)
+    configure_wrappers(args)
 
 if __name__ == '__main__':
     main()
