@@ -40,6 +40,7 @@ setup(name='public-wrappers',
       },
       license='MIT',
       install_requires=[
+          'exec-wrappers',
           'future',
           'pytoml',
       ],
