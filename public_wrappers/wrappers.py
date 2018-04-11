@@ -86,7 +86,8 @@ def _validate_wrappers(config, wrappers_by_dir, envs_by_program):
             if not os.path.exists(os.path.join(bindir, program)):
                 config.error('%s not found in %s' % (program, bindir))
 
-def _create_wrappers(args, wrappers_by_dir):
+def _create_wrappers(args, config, wrappers_by_dir):
+    overlayfs = config.getValueOrNone('overlayfs')
     for wrapperdir, wrappers in viewitems(wrappers_by_dir):
         # ensure wrapperdir exists
         if not os.path.isdir(wrapperdir):
@@ -103,15 +104,23 @@ def _create_wrappers(args, wrappers_by_dir):
                     os.remove(path)
 
         # create wrappers
+        run_in_path = os.path.join(wrapperdir, 'run-in')
         for program, options in viewitems(wrappers):
+            program_path = os.path.join(wrapperdir, program)
             cmd = ['create-wrappers']
             for k, v in viewitems(options):
                 cmd.extend([k, v])
             if program not in existing_programs or args.force:
                 sys.stderr.write('%s\n' % ' '.join(cmd))
+                if overlayfs:
+                    # work-around to broken permissions on overlayfs, which stop us overwriting existing files
+                    if os.path.exists(program_path):
+                        os.remove(program_path)
+                    if os.path.exists(run_in_path):
+                        os.remove(run_in_path)
                 subprocess.check_call(cmd)
-                _workaround_broken_exec_wrappers_permissions(os.path.join(wrapperdir, program))
-        _workaround_broken_exec_wrappers_permissions(os.path.join(wrapperdir, 'run-in'))
+                _workaround_broken_exec_wrappers_permissions(program_path)
+                _workaround_broken_exec_wrappers_permissions(run_in_path)
 
 def configure_wrappers(args):
     envs_by_program = {}
@@ -121,6 +130,6 @@ def configure_wrappers(args):
         _determine_wrappers('conda', config, wrappers_by_dir, envs_by_program)
         _determine_wrappers('virtualenv', config, wrappers_by_dir, envs_by_program)
         _validate_wrappers(config, wrappers_by_dir, envs_by_program)
-        _create_wrappers(args, wrappers_by_dir)
+        _create_wrappers(args, config, wrappers_by_dir)
     except ConfigError as e:
         sys.stderr.write('%s\n' % e)
