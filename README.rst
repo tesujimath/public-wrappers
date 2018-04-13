@@ -35,7 +35,9 @@ configuration item ``globally-unique-wrappers`` is ``true``.
 Environment variables such as ``$HOME`` or user-relative pathnames such as
 ``~`` may be used in the configuration file.
 
-See the `example configuration file <doc/example-config.toml>`__.
+See the `example configuration file <doc/example-config.toml>`__.  Also, it is
+recommended to install a profile file into ``/etc/profile.d``.  See the
+`example profile.sh <doc/example-profile.sh>`__.
 
 Usage
 =====
