@@ -64,3 +64,10 @@ public-wrappers is available on PyPI.
   $ source ~/virtualenvs/public-wrappers/bin/activate
   (public-wrappers)$ pip install public-wrappers
   (public-wrappers)$ configure-public-wrappers --help
+
+and also on `conda-forge <https://conda-forge.org/>`_.
+
+::
+
+  $ conda install public-wrappers
+  $ configure-public-wrappers --help
