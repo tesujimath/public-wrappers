@@ -2,16 +2,80 @@ globally-unique-wrappers = true
 overlayfs = true
 
 [conda.bifo-essential]
-wrapperdir = "~/wrappers/bifo-essential-wrappers"
+wrapperdir = "/stash/miniconda3/envs/bifo-essential/public-wrappers"
 envdir = "/stash/miniconda3/envs/bifo-essential"
 public = [
+    "bcftools",
+    "blast",
     "blastall",
+    "blastn",
+    "blastp",
+    "blastx",
+    "bowtie",
+    "bowtie2",
+    "breseq",
     "bwa",
+    "cd-hit",
+    "cuffcompare",
+    "cuffdiff",
+    "cufflinks",
+    "cuffmerge",
+    "cuffnorm",
+    "cuffquant",
+    "diamond",
+    "edena",
+    "fastqc",
+    "flexbar",
+    "makeblastdb",
+    "mothur",
+    "pileup.sh",
+    "pilon",
+    "samtools",
+    "tblastn",
+    "tblastx",
+    "vcftools",
 ]
 
-[virtualenv.exec-wrappers]
-wrapperdir = "~/wrappers/exec-wrappers"
-envdir = "~/virtualenvs/exec-wrappers"
+[conda.bifo-interactive]
+wrapperdir = "/stash/miniconda3/envs/bifo-interactive/public-wrappers"
+envdir = "/stash/miniconda3/envs/bifo-interactive"
 public = [
-    "create-wrappers",
+    "igv",
+]
+
+[conda.canu]
+wrapperdir = "/stash/miniconda3/envs/canu/public-wrappers"
+envdir = "/stash/miniconda3/envs/canu"
+public = [
+    "canu",
+]
+
+[conda.circlator]
+wrapperdir = "/stash/miniconda3/envs/circlator/public-wrappers"
+envdir = "/stash/miniconda3/envs/circlator"
+public = [
+    "circlator",
+]
+
+[conda.InterProScan5]
+wrapperdir = "/stash/miniconda3/envs/InterProScan5/public-wrappers"
+envdir = "/stash/miniconda3/envs/InterProScan5"
+public = [
+    "interproscan.sh",
+]
+
+[conda.qiime_1]
+wrapperdir = "/stash/miniconda3/envs/qiime_1/public-wrappers"
+envdir = "/stash/miniconda3/envs/qiime_1"
+public = [
+    "pick_otus.py",
+]
+
+[conda.universal2]
+wrapperdir = "/stash/miniconda3/envs/universal2/public-wrappers"
+envdir = "/stash/miniconda3/envs/universal2"
+public = [
+    "configure-public-wrappers",
+    "filebutler",
+    "tardis",
 ]
