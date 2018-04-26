@@ -29,12 +29,6 @@ import sys
 from .ConfigError import ConfigError
 from .config import read_config_file
 
-def _workaround_broken_exec_wrappers_permissions(path):
-    """Only needed until https://github.com/gqmelo/exec-wrappers/pull/21 is merged,
-    and new release made."""
-    os.chmod(path,
-             os.stat(path).st_mode | stat.S_IXGRP | stat.S_IXOTH)
-
 def _envdir_tag(kind):
     if kind == 'conda':
         return '--conda-env-dir'
@@ -119,8 +113,6 @@ def _create_wrappers(args, config, wrappers_by_dir):
                     if os.path.exists(run_in_path):
                         os.remove(run_in_path)
                 subprocess.check_call(cmd)
-                _workaround_broken_exec_wrappers_permissions(program_path)
-                _workaround_broken_exec_wrappers_permissions(run_in_path)
 
 def configure_wrappers(args):
     envs_by_program = {}
