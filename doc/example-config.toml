@@ -79,3 +79,10 @@ public = [
     "filebutler",
     "tardis",
 ]
+
+[virtualenv.snoopy-log-collator]
+wrapperdir = "~/bin"
+envdir = "~/virtualenvs/snoopy-log-collator"
+public = [
+    "snoopy-log-collator",
+]
